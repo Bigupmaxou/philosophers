@@ -6,7 +6,7 @@
 /*   By: maxime <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:36:00 by maxime            #+#    #+#             */
-/*   Updated: 2024/04/18 17:22:57 by maxime           ###   ########.fr       */
+/*   Updated: 2024/05/17 09:12:11 by maxime           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,62 @@
 #include <limits.h>
 // for arg limits 
 
-typedef struct	s_philo
+struct	s_data;
+
+typedef struct s_philo
 {
-	int		numeroid;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	struct s_philo	*next;
+	int				id;
+	int				nb_eat;
+	int				left_fork;
+	int				right_fork;
+	int				fork1;
+	int				fork2;
+	pthread_t		thread_id;
+	struct s_data	*data;
+	long long		last_meal;
 }	t_philo;
 
+typedef struct s_data
+{
+	int					nb_philo;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					nb_eat_min;
+	int					all_ate;
+	int					death;
+	char				fork_available[250];
+	pthread_mutex_t		mutex_forks[250];
+	pthread_mutex_t		meal_check;
+	pthread_mutex_t		check_death;
+	pthread_mutex_t		print;
+	t_philo				philo[250];
+	long long			start_time;
+}	t_data;
+
 int			ft_atoi(const char *str);
-t_philo		*init_philo(int nbrphilo, int timedie, int timeat, int timesleep);
-int			checkarg(char **av);
-int			checknbr(char *av);
-int			limitsnbr(char *av);
+void                 	init_data(int ac, char **av, t_data *data);
+void			init_philo(t_data *data);
+int                     checkarg(char **av);
+int                     checknbr(char *av);
+int                     limitsnbr(char *av);
+void    		ft_putdown_fork(t_philo *philo, t_data *data);
+void    		ft_take_forks(t_philo *philo, t_data *data);
+void    		ft_eat(t_philo *philo, t_data *data);
+void    		*routine(void *philo_void);
+int     	ft_create_threads(t_data *data);
+void    	check_die(t_data *data, t_philo *philo);
+void    	ft_loop_check(t_data *data, t_philo *philo);
+void    	ft_exit_mutex(t_data *data);
+int     	ft_create_threads(t_data *data);
+void    	*routine(void *philo_void);
+void    	ft_eat(t_philo *philo, t_data *data);
+void    	ft_take_forks(t_philo *philo, t_data *data);
+void    	ft_putdown_fork(t_philo *philo, t_data *data);
+long long       ft_timestamp(void);
+void    ft_print_action(t_data *data, int id, char *str, char *color);
+void    ft_sleep(int time);
+int     ft_is_dead(t_data *data);
+int    init_thread(t_data *data);
 
 #endif

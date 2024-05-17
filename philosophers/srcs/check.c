@@ -6,7 +6,7 @@
 /*   By: maxime <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 17:48:26 by maxime            #+#    #+#             */
-/*   Updated: 2024/04/19 18:41:30 by maxime           ###   ########.fr       */
+/*   Updated: 2024/04/22 14:57:51 by maxime           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	limits(char *str)
 	nbr = ft_atoi(str);
 	if(nbr > INT_MAX || nbr < 0)
 	{
+		printf("erreur de limite int\n");
 		return(1);
 	}
 	return(0);
@@ -34,11 +35,11 @@ int	checknbr(char *str)
 		if (str[i] < '0' || str[i] > '9')
 		{
 			printf("pas de lettres dans vos arguments\n");
-			return (0);
+			return (1);
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 int	checkarg(char **av)
@@ -48,10 +49,9 @@ int	checkarg(char **av)
 	i = 1;
 	while (av[i])
 	{
-		if(!imits(av[i]))
+		if(limits(av[i]) || checknbr(av[i]))
 		{	
-			printf("erreur du format d'argument\n");
-			return(0);
+			return(1);
 		}
 		i++;
 	}
